@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/Cube.bmp</file>
+        <file>shader/vertshader.glsl</file>
+    </qresource>
+</RCC>
