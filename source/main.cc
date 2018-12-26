@@ -12,6 +12,6 @@ int main(int argc, char *argv[])
     MatchViewer window;
     window.setFormat(format);
     window.show();
-    window.setAnimating(false);
+    window.setAnimating(true);
     return app.exec();
 }

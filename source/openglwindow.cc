@@ -38,7 +38,8 @@ void OpenGLWindow::resizeGL(int w, int h)
     }
     m_projection.setToIdentity();
     m_projection.perspective(45, (float)w/float(h), 1, 1000);
-    m_modelView.setToIdentity();
+    m_model.setToIdentity();
+    m_view.setToIdentity();
 }
 
 void OpenGLWindow::setAnimating(bool animating)

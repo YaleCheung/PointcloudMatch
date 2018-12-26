@@ -22,32 +22,33 @@ void MatchViewer::initialize() {
     initGeometry();
     glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
     glClearDepthf(1.0);
+    //glDepthFunc(GL_LEQUAL);
     //glEnable(GL_DEPTH_TEST);
     //glEnable(GL_CULL_FACE);
     glEnable(GL_POINT_SMOOTH);
+    glPointSize(10.0f);
+    //glEnable(GL_BLEND);
+    //glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
     loadShader();
-    //glDepthFunc(GL_LEQUAL);
 
 }
 
 void MatchViewer::render() {
-    m_program->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glMatrixMode(GL_MODELVIEW);
+    m_program->bind();
 
-    m_modelView.setToIdentity();
-    m_modelView.translate(0, 0, -7.0);
-    m_modelView.rotate(m_xrot, 1.0, 0.0, 0.0);
-    m_modelView.rotate(m_yrot, 0.0, 1.0, 0.0);
-    m_modelView.rotate(m_zrot, 0.0, 1.0, 1.0);
+    m_model.setToIdentity();
+    //m_model.translate(0.0f, 0.0f, -7.0f);
+    m_model.rotate(m_xrot, 1.0f, 0.0f, 0.0f);
+    m_view.lookAt(QVector3D(0.0f, -5.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    QMatrix4x4 mvp = m_projection * m_view * m_model;
+    //QMatrix4x4 mvp = m_projection * m_model;
+    m_program->setUniformValue("mvpMatrix", mvp);
 
-    //m_program->setUniformValue("mvMatrix", m_modelView);
-    m_program->setUniformValue("mvpMatrix", m_projection * m_modelView);
 
-
-    //quintptr offset = 0;
-
-    //glDrawElements(GL_POINTS, 2, GL_UNSIGNED_SHORT, 0);
 
     quintptr offset = 0;
     glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);
@@ -58,11 +59,12 @@ void MatchViewer::render() {
     offset += sizeof(QVector3D);
     m_program->enableAttributeArray((m_colorAttr));
     glVertexAttribPointer(m_colorAttr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
-    //glPointSize(10.0f);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
-    glDrawElements(GL_POINTS, 3, GL_UNSIGNED_INT, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
+    glDrawElements(GL_POINTS,3, GL_UNSIGNED_SHORT, nullptr);
 
     m_program->release();
+
+    m_xrot += 0.5;
 }
 
 void MatchViewer::keyPressEvent(QKeyEvent *event) {
@@ -107,9 +109,9 @@ void MatchViewer::initGeometry() {
     glGenBuffers(2, &m_vboIds[0]);
     // Transfer vertex data to VBO 0
     VertexData vertices[] = {
-        {QVector3D{-0.2, -0.8, 0.0}, QVector3D{0.36, 0.0, 0.0}},
-        {QVector3D{-1.0, -1.0, 0.0}, QVector3D{0.00, 0.8, 0.0}},
-        {QVector3D{ 0.0,  0.0, 0.0}, QVector3D{0.00, 0.0, 0.3}},
+        {QVector3D(-0.2f, -0.8f, 0.0f), QVector3D(0.36f, 0.0f, 0.0f)},
+        {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.00f, 0.8f, 0.0f)},
+        {QVector3D( 0.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.0f, 0.3f)},
     };
     std::cout << "size of vertices " << sizeof(vertices) << '\n';
     GLushort indices[] = {0, 1, 2};

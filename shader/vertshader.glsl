@@ -15,6 +15,6 @@ varying vec3 vColor;
 void main()
 {
     gl_Position = mvpMatrix * posAttr;
-    gl_PointSize = 10.0;
+    //gl_PointSize = 10.0;
     vColor = colorAttr;
 }
