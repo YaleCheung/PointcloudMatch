@@ -3,18 +3,18 @@ precision mediump int;
 precision mediump float;
 #endif
 
-attribute vec4 posAttr;
-attribute vec3 colorAttr;
+attribute vec4 pos_attr;
+attribute vec3 color_attr;
 
-uniform mat4 mvMatrix;
-uniform mat4 mvpMatrix;
+uniform mat4 mv_matrix;
+uniform mat4 mvp_matrix;
 
 
 
-varying vec3 vColor;
+varying vec3 v_color;
 void main()
 {
-    gl_Position = mvpMatrix * posAttr;
+    gl_Position = mvp_matrix * pos_attr;
     //gl_PointSize = 10.0;
-    vColor = colorAttr;
+    v_color = color_attr;
 }

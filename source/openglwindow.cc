@@ -2,11 +2,12 @@
 
 OpenGLWindow::OpenGLWindow(QWindow *parent) :
     QWindow(parent),
-    m_update_pending(false),
-    m_animating(false),
-    m_context(NULL),
-    m_show_full_screen(false)
+    _update_pending(false),
+    _animating(false),
+    _context(nullptr),
+    _show_full_screen(false)
 {
+    camera = std::unique_ptr<Camera>(new Camera(480.0f / 640.0f));
     setSurfaceType(QWindow::OpenGLSurface);
     resize(640, 480);
 }
@@ -32,19 +33,18 @@ void OpenGLWindow::resizeGL(int w, int h)
     {
         h = 1;
     }
-    if (m_context)
+    if (_context)
     {
         glViewport(0, 0, w, h);
     }
-    m_projection.setToIdentity();
-    m_projection.perspective(45, (float)w/float(h), 1, 1000);
-    m_model.setToIdentity();
-    m_view.setToIdentity();
+    camera->resetView();
+    camera->resetProj();
+    camera->setPerspectiveProj(45.0f, float(w) / h, 1, 1000);
 }
 
 void OpenGLWindow::setAnimating(bool animating)
 {
-    m_animating = animating;
+    animating = animating;
     if(animating)
     {
         renderLater();
@@ -53,9 +53,9 @@ void OpenGLWindow::setAnimating(bool animating)
 
 void OpenGLWindow::renderLater()
 {
-    if (!m_update_pending)
+    if (!_update_pending)
     {
-        m_update_pending = true;
+        _update_pending = true;
         QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
     }
 }
@@ -65,29 +65,29 @@ void OpenGLWindow::renderNow()
     if (!isExposed())
         return;
 
-    bool needsInitialize = false;
+    bool needs_initialize = false;
 
-    if (!m_context)
+    if (!_context)
     {
-        m_context = new QOpenGLContext(this);
-        m_context->setFormat(requestedFormat());
-        m_context->create();
-        needsInitialize = true;
+        _context = std::unique_ptr<QOpenGLContext>(new QOpenGLContext(this));
+        _context->setFormat(requestedFormat());
+        _context->create();
+        needs_initialize = true;
     }
 
-    m_context->makeCurrent(this);
-    if (needsInitialize)
+    _context->makeCurrent(this);
+    if (needs_initialize)
     {
         initializeOpenGLFunctions();
         initialize();
-        const qreal retinaScale = devicePixelRatio();
-        resizeGL(width()*retinaScale, height()*retinaScale);
+        const qreal retina_scale = devicePixelRatio();
+        resizeGL(width()*retina_scale, height()*retina_scale);
     }
     render();
 
-    m_context->swapBuffers(this);
+    _context->swapBuffers(this);
 
-    if (m_animating)
+    if (_animating)
         renderLater();
 }
 
@@ -96,7 +96,7 @@ bool OpenGLWindow::event(QEvent *event)
     switch (event->type())
     {
         case QEvent::UpdateRequest:
-            m_update_pending = false;
+            _update_pending = false;
             renderNow();
             return true;
         default:
@@ -117,8 +117,8 @@ void OpenGLWindow::resizeEvent(QResizeEvent *event)
 {
     int w = event->size().width();
     int h = event->size().height();
-    const qreal retinaScale = devicePixelRatio();
-    resizeGL(w*retinaScale, h*retinaScale);
+    const qreal retina_scale = devicePixelRatio();
+    resizeGL(w * retina_scale, h * retina_scale);
     renderNow();
     QWindow::resizeEvent(event);
 }
@@ -129,8 +129,8 @@ void OpenGLWindow::keyPressEvent(QKeyEvent *event)
     {
         case Qt::Key_F1:
         {
-            m_show_full_screen = !m_show_full_screen;
-            if(m_show_full_screen)
+            _show_full_screen = !_show_full_screen;
+            if(_show_full_screen)
             {
                 showFullScreen();
             }

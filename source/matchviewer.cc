@@ -1,6 +1,4 @@
 #include "../include/matchviewer.h"
-#include <iostream>
-
 
 struct VertexData {
     QVector3D position;
@@ -10,13 +8,12 @@ struct VertexData {
 
 MatchViewer::MatchViewer(QWindow *parent) :
     OpenGLWindow(parent),
-    m_program(NULL),
-    m_xrot(0.0f),
-    m_yrot(0.0f),
-    m_zrot(0.0f) { }
+    _xrot(0.0f),
+    _yrot(0.0f),
+    _zrot(0.0f) { }
 
 MatchViewer::~MatchViewer() {
-    glDeleteBuffers(2, &m_vboIds[0]);
+    glDeleteBuffers(2, &_vbo_ids[0]);
 }
 
 void MatchViewer::initialize() {
@@ -39,32 +36,35 @@ void MatchViewer::initialize() {
 
 void MatchViewer::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m_program->bind();
+    _program->bind();
 
-    m_model.setToIdentity();
-    m_view.setToIdentity();
-    m_model.rotate(m_xrot, 1.0f, 0.0f, 0.0f);
-    m_view.lookAt(QVector3D(5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
-    QMatrix4x4 mvp = m_projection * m_view * m_model;
-    m_program->setUniformValue("mvpMatrix", mvp);
+
+    _model.setToIdentity();
+    _model.rotate(_xrot, 1.0f, 0.0f, 0.0f);
+
+
+    camera->resetView();
+    camera->setView(QVector3D(5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    auto mvp = camera->getProj() * camera->getView() * _model;
+    _program->setUniformValue("mvp_matrix", mvp);
 
 
 
     quintptr offset = 0;
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo_ids[0]);
 
-    m_program->enableAttributeArray(m_posAttr);
-    glVertexAttribPointer(m_posAttr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
+    _program->enableAttributeArray(_pos_attr);
+    glVertexAttribPointer(_pos_attr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
 
     offset += sizeof(QVector3D);
-    m_program->enableAttributeArray((m_colorAttr));
-    glVertexAttribPointer(m_colorAttr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
+    _program->enableAttributeArray((_color_attr));
+    glVertexAttribPointer(_color_attr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[1]);
     glDrawElements(GL_POINTS,3, GL_UNSIGNED_SHORT, nullptr);
 
-    m_program->release();
+    _program->release();
 
-    m_xrot += 0.5;
+    _xrot += 0.5;
 }
 
 void MatchViewer::keyPressEvent(QKeyEvent *event) {
@@ -72,22 +72,22 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
     {
         case Qt::Key_Up:
         {
-            m_xrot-=0.5f;
+            _xrot-=0.5f;
             break;
         }
         case Qt::Key_Down:
         {
-            m_xrot+=0.5f;
+            _xrot+=0.5f;
             break;
         }
         case Qt::Key_Left:
         {
-            m_yrot-=0.5f;
+            _yrot-=0.5f;
             break;
         }
         case Qt::Key_Right:
         {
-            m_yrot+=0.5f;
+            _yrot+=0.5f;
             break;
         }
     }
@@ -97,28 +97,27 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
 
 
 void MatchViewer::loadShader() {
-    m_program = new QOpenGLShaderProgram(this);
-    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/vertshader.glsl");
-    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/fragshader.glsl");
-    m_program->link();
-    m_posAttr = m_program->attributeLocation("posAttr");
-    m_colorAttr = m_program->attributeLocation("colorAttr");
+    _program = std::unique_ptr<QOpenGLShaderProgram>(new QOpenGLShaderProgram(this));
+    _program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/vertshader.glsl");
+    _program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/fragshader.glsl");
+    _program->link();
+    _pos_attr = _program->attributeLocation("pos_attr");
+    _pos_attr = _program->attributeLocation("color_attr");
 }
 
 void MatchViewer::initGeometry() {
-    glGenBuffers(2, &m_vboIds[0]);
+    glGenBuffers(2, &_vbo_ids[0]);
     // Transfer vertex data to VBO 0
     VertexData vertices[] = {
         {QVector3D(-0.2f, -0.8f, 0.0f), QVector3D(0.36f, 0.0f, 0.0f)},
         {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.00f, 0.8f, 0.0f)},
         {QVector3D( 0.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.0f, 0.3f)},
     };
-    std::cout << "size of vertices " << sizeof(vertices) << '\n';
     GLushort indices[] = {0, 1, 2};
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboIds[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, _vbo_ids[0]);
     glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(VertexData), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vboIds[1]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort), indices, GL_STATIC_DRAW);
 }

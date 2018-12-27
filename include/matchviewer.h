@@ -3,12 +3,12 @@
 
 #include "openglwindow.h"
 #include <QOpenGLShaderProgram>
+#include <memory>
 
 class MatchViewer : public OpenGLWindow
 {
-    Q_OBJECT
 public:
-    explicit MatchViewer(QWindow *parent = 0);
+    explicit MatchViewer(QWindow *parent = nullptr);
     ~MatchViewer();
 protected:
     void initialize();
@@ -19,17 +19,17 @@ private:
 private:
     void initGeometry();
 private:
-    QOpenGLShaderProgram *m_program;
-    GLuint m_posAttr;
-    GLuint m_colorAttr;
-    //GLuint m_texCoordAttr;
-    //GLuint m_normalAttr;
+    std::unique_ptr<QOpenGLShaderProgram> _program;
+    GLuint _pos_attr;
+    GLuint _color_attr;
 
-    GLuint m_vboIds[2];
-    //GLuint m_texture;
-    GLfloat m_xrot;
-    GLfloat m_yrot;
-    GLfloat m_zrot;
+    QMatrix4x4 _model;
+
+    GLuint _vbo_ids[2];
+
+    GLfloat _xrot;
+    GLfloat _yrot;
+    GLfloat _zrot;
 };
 
 #endif // MATCHVIEWER_HHH
