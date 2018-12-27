@@ -12,7 +12,8 @@ MatchViewer::MatchViewer(QWindow *parent) :
     OpenGLWindow(parent),
     m_program(NULL),
     m_xrot(0.0f),
-    m_yrot(0.0f) { }
+    m_yrot(0.0f),
+    m_zrot(0.0f) { }
 
 MatchViewer::~MatchViewer() {
     glDeleteBuffers(2, &m_vboIds[0]);
@@ -22,13 +23,14 @@ void MatchViewer::initialize() {
     initGeometry();
     glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
     glClearDepthf(1.0);
-    //glDepthFunc(GL_LEQUAL);
-    //glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH, GL_NICEST);
     glPointSize(10.0f);
-    //glEnable(GL_BLEND);
-    //glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glEnable(GL_BLEND);
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     loadShader();
@@ -37,15 +39,13 @@ void MatchViewer::initialize() {
 
 void MatchViewer::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glMatrixMode(GL_MODELVIEW);
     m_program->bind();
 
     m_model.setToIdentity();
-    //m_model.translate(0.0f, 0.0f, -7.0f);
+    m_view.setToIdentity();
     m_model.rotate(m_xrot, 1.0f, 0.0f, 0.0f);
-    m_view.lookAt(QVector3D(0.0f, -5.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    m_view.lookAt(QVector3D(5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
     QMatrix4x4 mvp = m_projection * m_view * m_model;
-    //QMatrix4x4 mvp = m_projection * m_model;
     m_program->setUniformValue("mvpMatrix", mvp);
 
 
