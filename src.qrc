@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>image/Cube.bmp</file>
         <file>shader/vertshader.glsl</file>
+        <file>shader/fragshader.glsl</file>
     </qresource>
 </RCC>

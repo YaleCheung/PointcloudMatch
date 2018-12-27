@@ -28,5 +28,4 @@ HEADERS  += \
     include/angle.h
 
 RESOURCES += \
-    shader/vertshader.glsl \
-    shader/fragshader.glsl
+    src.qrc
