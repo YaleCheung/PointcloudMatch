@@ -1,9 +1,5 @@
 #include "../include/matchviewer.h"
-
-struct VertexData {
-    QVector3D position;
-    QVector3D color;
-};
+#include "../include/point.h"
 
 
 MatchViewer::MatchViewer(QWindow *parent) :
@@ -44,7 +40,7 @@ void MatchViewer::render() {
 
 
     camera->resetView();
-    camera->setView(QVector3D(-5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    camera->setView(QVector3D(5.0f, 10.0f, 5.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
     auto mvp = camera->getProj() * camera->getView() * _model;
     _program->setUniformValue("mvp", mvp);
 
@@ -105,7 +101,7 @@ void MatchViewer::initGeometry() {
     // Transfer vertex data to VBO 0
     VertexData vertices[] = {
         {QVector3D(-0.2f, -0.8f, 0.0f), QVector3D(0.36f, 0.0f, 0.0f)},
-        {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.00f, 0.8f, 0.0f)},
+        {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.40f, 0.8f, 0.0f)},
         {QVector3D( 1.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.20f, 0.0f)},
     };
     GLushort indices[] = {0, 1, 2};

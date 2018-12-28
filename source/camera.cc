@@ -5,7 +5,10 @@
 #include "../include/camera.h"
 
 void Camera::setView(const QVector3D& eye, const QVector3D& at, const QVector3D& up) {
-    _view.lookAt(eye, at, up);
+    _eye = eye;
+    _at = at;
+    _up = up;
+    _updateView();
 }
 
 void Camera::setOrthoProj(float left, float right, float bottom, float top, float near_plane, float far_plane) {

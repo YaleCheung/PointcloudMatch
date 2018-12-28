@@ -24,6 +24,10 @@ public:
     }
 
     void setView(const QVector3D& eye, const QVector3D& at, const QVector3D& up);
+    void setEye(const QVector3D& eye) { _eye = eye; _updateView();}
+    void setAt(const QVector3D& at) { _at = at; _updateView();}
+    void setUp(const QVector3D& up) { _up = up; _updateView();}
+    void moveTo(QVector3D& eye) { setEye(eye); }
 
     // Projection
     void setOrthoProj(float left, float right, float bottom, float top, float near_plane, float far_plane);
@@ -35,18 +39,22 @@ public:
     //void rotPitch(float angle_rad);
     //void camRotate(float degree, QVector3D axis);
 
-    //void moveTo();
 
     // get set
     const QMatrix4x4& getView() {return _view;}
-    const QMatrix4x4& getProj() const {return _projection;}
+    const QMatrix4x4& getProj() {return _projection;}
+    const QVector3D& getEye() {return _eye;}
+    const QVector3D& getAt() {return _at;}
+    const QVector3D& getUp() {return _up;}
 
 private:
-    //QVector3D _eye;
-    //QVector3D _at;
-    //QVector3D _up;
 
-    QMatrix4x4 _view;
+    void _updateView() { _view.lookAt(_eye, _at, _up); }
+    QVector3D _eye;
+    QVector3D _at;
+    QVector3D _up;
+
+    QMatrix4x4 _view;   // for convinence;
     QMatrix4x4 _projection;
     float _aspect_ratio;
 };

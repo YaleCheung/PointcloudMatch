@@ -25,7 +25,8 @@ HEADERS  += \
     include/openglwindow.h \
     include/matchviewer.h \
     include/camera.h \
-    include/angle.h
+    include/angle.h \
+    include/point.h
 
 RESOURCES += \
     src.qrc
