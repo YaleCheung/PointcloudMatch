@@ -44,9 +44,9 @@ void MatchViewer::render() {
 
 
     camera->resetView();
-    camera->setView(QVector3D(5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    camera->setView(QVector3D(-5.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
     auto mvp = camera->getProj() * camera->getView() * _model;
-    _program->setUniformValue("mvp_matrix", mvp);
+    _program->setUniformValue("mvp", mvp);
 
 
 
@@ -59,7 +59,7 @@ void MatchViewer::render() {
     offset += sizeof(QVector3D);
     _program->enableAttributeArray((_color_attr));
     glVertexAttribPointer(_color_attr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[1]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
     glDrawElements(GL_POINTS,3, GL_UNSIGNED_SHORT, nullptr);
 
     _program->release();
@@ -68,25 +68,20 @@ void MatchViewer::render() {
 }
 
 void MatchViewer::keyPressEvent(QKeyEvent *event) {
-    switch(event->key())
-    {
-        case Qt::Key_Up:
-        {
+    switch(event->key()) {
+        case Qt::Key_Up: {
             _xrot-=0.5f;
             break;
         }
-        case Qt::Key_Down:
-        {
+        case Qt::Key_Down: {
             _xrot+=0.5f;
             break;
         }
-        case Qt::Key_Left:
-        {
+        case Qt::Key_Left: {
             _yrot-=0.5f;
             break;
         }
-        case Qt::Key_Right:
-        {
+        case Qt::Key_Right: {
             _yrot+=0.5f;
             break;
         }
@@ -111,12 +106,12 @@ void MatchViewer::initGeometry() {
     VertexData vertices[] = {
         {QVector3D(-0.2f, -0.8f, 0.0f), QVector3D(0.36f, 0.0f, 0.0f)},
         {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.00f, 0.8f, 0.0f)},
-        {QVector3D( 0.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.0f, 0.3f)},
+        {QVector3D( 1.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.20f, 0.0f)},
     };
     GLushort indices[] = {0, 1, 2};
 
     glBindBuffer(GL_ARRAY_BUFFER, _vbo_ids[0]);
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(VertexData), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(VertexData), vertices, GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort), indices, GL_STATIC_DRAW);

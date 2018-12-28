@@ -5,11 +5,10 @@
 #include <QOpenGLShaderProgram>
 #include <memory>
 
-class MatchViewer : public OpenGLWindow
-{
+class MatchViewer : public OpenGLWindow {
 public:
     explicit MatchViewer(QWindow *parent = nullptr);
-    ~MatchViewer();
+    virtual ~MatchViewer();
 protected:
     void initialize();
     void render();

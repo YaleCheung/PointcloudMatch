@@ -11,8 +11,7 @@
 #include "../include/camera.h"
 #include <memory>
 
-class OpenGLWindow : public QWindow, protected QOpenGLFunctions
-{
+class OpenGLWindow : public QWindow, protected QOpenGLFunctions {
     Q_OBJECT
 public:
     explicit OpenGLWindow(QWindow *parent = nullptr);
