@@ -10,8 +10,10 @@
 #include <QMatrix4x4>
 #include "../include/camera.h"
 #include <memory>
+#include "noncopyable.h"
+#include "cameracontroller.h"
 
-class OpenGLWindow : public QWindow, protected QOpenGLFunctions {
+class OpenGLWindow : public QWindow, NonCopyable, protected QOpenGLFunctions {
     Q_OBJECT
 public:
     explicit OpenGLWindow(QWindow *parent = nullptr);
@@ -37,7 +39,8 @@ protected:
     virtual void initialize();
 
     virtual void resizeGL(int w, int h);
-    std::unique_ptr<Camera> camera;
+    std::unique_ptr<CameraController> main_cam_controller;
+
 private:
     bool _update_pending;
     bool _animating;

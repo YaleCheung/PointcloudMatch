@@ -6,7 +6,7 @@ OpenGLWindow::OpenGLWindow(QWindow *parent) :
     _animating(false),
     _context(nullptr),
     _show_full_screen(false) {
-    camera = std::unique_ptr<Camera>(new Camera(float(480.0) / 640.0f));
+    auto camera = std::make_shared<Camera>(DEFAULT_RATIO);
     setSurfaceType(QWindow::OpenGLSurface);
     resize(640, 480);
 }
@@ -22,9 +22,9 @@ void OpenGLWindow::resizeGL(int w, int h) {
         h = 1;
     if (_context)
         glViewport(0, 0, w, h);
-    camera->resetView();
-    camera->resetProj();
-    camera->setPerspectiveProj(45.0f, float(w) / float(h), 1, 1000);
+    main_cam_controller->resetView();
+    main_cam_controller->resetProj();
+    main_cam_controller->setPersModel(DEFAULT_FOV, float(w) / float(h), 1, 1000);
 }
 
 void OpenGLWindow::setAnimating(bool animating) {
@@ -44,7 +44,7 @@ void OpenGLWindow::renderNow() {
     if (!isExposed())
         return;
 
-    bool needs_initialize = false;
+    auto needs_initialize = false;
 
     if (!_context) {
         _context = std::unique_ptr<QOpenGLContext>(new QOpenGLContext(this));
@@ -57,7 +57,7 @@ void OpenGLWindow::renderNow() {
     if (needs_initialize) {
         initializeOpenGLFunctions();
         initialize();
-        const qreal retina_scale = devicePixelRatio();
+        const auto retina_scale = devicePixelRatio();
         resizeGL(width()*retina_scale, height()*retina_scale);
     }
     render();
@@ -86,9 +86,9 @@ void OpenGLWindow::exposeEvent(QExposeEvent *event) {
 }
 
 void OpenGLWindow::resizeEvent(QResizeEvent *event) {
-    int w = event->size().width();
-    int h = event->size().height();
-    const qreal retina_scale = devicePixelRatio();
+    auto w = event->size().width();
+    auto h = event->size().height();
+    const auto retina_scale = devicePixelRatio();
     resizeGL(w * retina_scale, h * retina_scale);
     renderNow();
     QWindow::resizeEvent(event);

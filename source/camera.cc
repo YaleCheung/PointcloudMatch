@@ -1,4 +1,4 @@
-#include "../include/camera.h"
+
 //#include "basicmesh.h"
 #include <cmath>
 
@@ -11,10 +11,10 @@ void Camera::setView(const QVector3D& eye, const QVector3D& at, const QVector3D&
     _updateView();
 }
 
-void Camera::setOrthoProj(float left, float right, float bottom, float top, float near_plane, float far_plane) {
-    _projection.ortho(left, right, bottom, top, near_plane, far_plane);
+void Camera::setOrthoProj(const QRectF& rect) {
+    _projection.ortho(rect);
 }
 
-void Camera::setPerspectiveProj(float vertical_angle, float aspect_ratio, float near_plane, float far_plane) {
-    _projection.perspective(vertical_angle, aspect_ratio, near_plane, far_plane);
+void Camera::setPerspectiveProj(float fov, float aspect_ratio, float near_plane, float far_plane) {
+    _projection.perspective(fov, aspect_ratio, near_plane, far_plane);
 }

@@ -3,10 +3,7 @@
 
 
 MatchViewer::MatchViewer(QWindow *parent) :
-    OpenGLWindow(parent),
-    _xrot(0.0f),
-    _yrot(0.0f),
-    _zrot(0.0f) { }
+    OpenGLWindow(parent) { }
 
 MatchViewer::~MatchViewer() {
     glDeleteBuffers(2, &_vbo_ids[0]);
@@ -40,7 +37,7 @@ void MatchViewer::render() {
 
 
     camera->resetView();
-    camera->setView(QVector3D(5.0f, 10.0f, 5.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
+    camera->setView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
     auto mvp = camera->getProj() * camera->getView() * _model;
     _program->setUniformValue("mvp", mvp);
 
@@ -93,16 +90,16 @@ void MatchViewer::loadShader() {
     _program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/fragshader.glsl");
     _program->link();
     _pos_attr = _program->attributeLocation("pos_attr");
-    _pos_attr = _program->attributeLocation("color_attr");
+    _color_attr = _program->attributeLocation("color_attr");
 }
 
 void MatchViewer::initGeometry() {
     glGenBuffers(2, &_vbo_ids[0]);
     // Transfer vertex data to VBO 0
     VertexData vertices[] = {
-        {QVector3D(-0.2f, -0.8f, 0.0f), QVector3D(0.36f, 0.0f, 0.0f)},
-        {QVector3D(-1.0f, -1.0f, 0.0f), QVector3D(0.40f, 0.8f, 0.0f)},
-        {QVector3D( 1.0f,  0.0f, 0.0f), QVector3D(0.00f, 0.20f, 0.0f)},
+        {QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.3f, 0.0f, 0.0f)},
+        {QVector3D(0.0f, 0.8f, 0.0f), QVector3D(0.0f, 0.5f, 0.0f)},
+        {QVector3D(-1.0f, -1.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.8f)}
     };
     GLushort indices[] = {0, 1, 2};
 

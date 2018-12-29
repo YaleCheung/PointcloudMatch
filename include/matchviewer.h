@@ -4,6 +4,7 @@
 #include "openglwindow.h"
 #include <QOpenGLShaderProgram>
 #include <memory>
+#include "noncopyable.h"
 
 class MatchViewer : public OpenGLWindow {
 public:
@@ -23,12 +24,8 @@ private:
     GLuint _color_attr;
 
     QMatrix4x4 _model;
-
     GLuint _vbo_ids[2];
 
-    GLfloat _xrot;
-    GLfloat _yrot;
-    GLfloat _zrot;
 };
 
 #endif // MATCHVIEWER_HHH
