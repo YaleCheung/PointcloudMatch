@@ -7,6 +7,7 @@ OpenGLWindow::OpenGLWindow(QWindow *parent) :
     _context(nullptr),
     _show_full_screen(false) {
     auto camera = std::make_shared<Camera>(DEFAULT_RATIO);
+    main_cam_controller = std::make_shared<CameraController>(camera);
     setSurfaceType(QWindow::OpenGLSurface);
     resize(640, 480);
 }

@@ -3,7 +3,10 @@
 
 
 MatchViewer::MatchViewer(QWindow *parent) :
-    OpenGLWindow(parent) { }
+    OpenGLWindow(parent),
+    _xrot(0.0f),
+    _yrot(0.0f),
+    _zrot(0.0f) { }
 
 MatchViewer::~MatchViewer() {
     glDeleteBuffers(2, &_vbo_ids[0]);
@@ -24,7 +27,6 @@ void MatchViewer::initialize() {
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     loadShader();
-
 }
 
 void MatchViewer::render() {
@@ -36,9 +38,14 @@ void MatchViewer::render() {
     _model.rotate(_xrot, 1.0f, 0.0f, 0.0f);
 
 
-    camera->resetView();
-    camera->setView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 1.0f));
-    auto mvp = camera->getProj() * camera->getView() * _model;
+    //main_cam_controller->resetView();
+    //auto proj = main_cam_controller->getCamProj();
+    //auto view = main_cam_controller->getCamView();
+    main_cam_controller->resetView();
+    main_cam_controller->setCamView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    auto mvp = main_cam_controller->getCamProj() * main_cam_controller->getCamView() * _model;
+
+
     _program->setUniformValue("mvp", mvp);
 
 
@@ -63,19 +70,20 @@ void MatchViewer::render() {
 void MatchViewer::keyPressEvent(QKeyEvent *event) {
     switch(event->key()) {
         case Qt::Key_Up: {
-            _xrot-=0.5f;
+            //_xrot-=0.5f;
+            main_cam_controller->zoom(0.1);
             break;
         }
         case Qt::Key_Down: {
-            _xrot+=0.5f;
+            main_cam_controller->zoom(-0.1);
             break;
         }
         case Qt::Key_Left: {
-            _yrot-=0.5f;
+            //_yrot-=0.5f;
             break;
         }
         case Qt::Key_Right: {
-            _yrot+=0.5f;
+            //_yrot+=0.5f;
             break;
         }
     }

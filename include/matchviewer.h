@@ -26,6 +26,10 @@ private:
     QMatrix4x4 _model;
     GLuint _vbo_ids[2];
 
+    float _xrot;
+    float _yrot;
+    float _zrot;
+
 };
 
 #endif // MATCHVIEWER_HHH

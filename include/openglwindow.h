@@ -39,7 +39,7 @@ protected:
     virtual void initialize();
 
     virtual void resizeGL(int w, int h);
-    std::unique_ptr<CameraController> main_cam_controller;
+    std::shared_ptr<CameraController> main_cam_controller;
 
 private:
     bool _update_pending;

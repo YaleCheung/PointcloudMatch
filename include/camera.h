@@ -13,17 +13,22 @@ constexpr float DEFAULT_FAR = 1000.0;
 class Camera {
 public:
     Camera(float aspect_ratio = DEFAULT_RATIO) :
-        _aspect_ratio(aspect_ratio) {
+        _aspect_ratio(aspect_ratio),
+        _eye(QVector3D(0.1, 0.1, 0.1)),
+        _at(QVector3D(0, 0, 0)),
+        _up(QVector3D(0, 1, 0)) {
         resetView();
-        _view.lookAt(QVector3D{0.0f, 0.0f, 5.0f},
-                     QVector3D{0.0f, 0.0f, 0.0f},
-                     QVector3D{0.0f, 1.0f, 0.0f});
         resetProj();
         _projection.perspective(DEFAULT_FOV, _aspect_ratio, DEFAULT_NEAR, DEFAULT_FAR);
     }
     ~Camera(){}
 
-    void resetView() { _view.setToIdentity();}
+    void resetView() {
+        _eye = QVector3D(0, 0, 0);
+        _at  = QVector3D(0, 0, 0);
+        _up  = QVector3D(0, 1, 0);
+        _view.setToIdentity();// because no
+    }
     void resetProj() { _projection.setToIdentity(); }
 
     void setView(const QVector3D& eye, const QVector3D& at, const QVector3D& up);
@@ -45,7 +50,9 @@ public:
 
 private:
 
-    void _updateView() { _view.lookAt(_eye, _at, _up); }
+    void _updateView() {
+        _view.lookAt(_eye, _at, _up);
+    }
     QVector3D _eye;
     QVector3D _at;
     QVector3D _up;

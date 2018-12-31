@@ -18,13 +18,17 @@ public:
     void resetView() { _camera->resetView(); }
     void resetProj() { _camera->resetProj(); }
 
-    void setCamView(const QVector3D& eye, const QVector3D& at, const QVector3D& up) { _camera->setView(eye, at, up); }
+    void setCamView(const QVector3D& eye, const QVector3D& at, const QVector3D& up) {
+        _cam_pos = eye;
+        _cam_direction = eye - at;
+        _camera->setView(eye, at, up);
+    }
 
     void setOthoModel(const QRectF& rect) { _camera->setOrthoProj(rect); }
     void setPersModel(float fov, float aspect_ratio, float near, float far) {_camera -> setPerspectiveProj(fov, aspect_ratio, near, far);}
 
-    const QMatrix4x4& getCamView() {_camera -> getView();}
-    const QMatrix4x4& getCamProj() {_camera -> getProj();}
+    const QMatrix4x4& getCamView() {return _camera -> getView();}
+    const QMatrix4x4& getCamProj() {return _camera -> getProj();}
 private:
     std::shared_ptr<Camera> _camera;
     QVector3D _cam_pos;
