@@ -28,11 +28,17 @@ public slots:
 protected:
     bool event(QEvent *event);
 
-    void exposeEvent(QExposeEvent *event);
+    void exposeEvent(QExposeEvent* event);
 
-    void resizeEvent(QResizeEvent * event);
+    void resizeEvent(QResizeEvent* event);
 
-    void keyPressEvent(QKeyEvent * event);
+    void keyPressEvent(QKeyEvent* event);
+
+    void mousePressEvent(QMouseEvent* event);
+
+    void mouseReleaseEvent(QMouseEvent* event);
+
+    void wheelEvent(QWheelEvent* event);
 
     virtual void render();
 

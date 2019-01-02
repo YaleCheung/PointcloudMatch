@@ -111,3 +111,15 @@ void OpenGLWindow::keyPressEvent(QKeyEvent *event) {
     }
     QWindow::keyPressEvent(event);
 }
+
+void OpenGLWindow::mousePressEvent(QMouseEvent* event) {
+    QWindow::mousePressEvent(event);
+}
+
+void OpenGLWindow::mouseReleaseEvent(QMouseEvent *event) {
+    QWindow::mouseReleaseEvent(event);
+}
+
+void OpenGLWindow::wheelEvent(QWheelEvent* event) {
+    QWindow::wheelEvent(event);
+}

@@ -71,24 +71,42 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
     switch(event->key()) {
         case Qt::Key_Up: {
             //_xrot-=0.5f;
-            main_cam_controller->zoom(0.1);
             break;
         }
         case Qt::Key_Down: {
-            main_cam_controller->zoom(-0.1);
+            //main_cam_controller->zoom(-0.1);
             break;
         }
         case Qt::Key_Left: {
             //_yrot-=0.5f;
+            main_cam_controller->translate(QVector3D(0.0f, 0.0f, 0.1f));
             break;
         }
         case Qt::Key_Right: {
+            main_cam_controller->translate(QVector3D(0.0f, 0.0f, -0.1f));
             //_yrot+=0.5f;
             break;
         }
     }
     renderNow();
     OpenGLWindow::keyPressEvent(event);
+}
+
+void MatchViewer::mousePressEvent(QMouseEvent *event) {
+
+}
+
+void MatchViewer::mouseReleaseEvent(QMouseEvent *event) {
+
+}
+
+void MatchViewer::wheelEvent(QWheelEvent *event) {
+    if (event->angleDelta().y() > 0)
+        main_cam_controller->zoom(0.1);
+    else
+        main_cam_controller->zoom(-0.1);
+    renderNow();
+    OpenGLWindow::wheelEvent(event);
 }
 
 

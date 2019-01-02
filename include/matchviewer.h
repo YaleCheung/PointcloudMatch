@@ -14,6 +14,9 @@ protected:
     void initialize();
     void render();
     void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void wheelEvent(QWheelEvent* event);
 private:
     void loadShader();
 private:
