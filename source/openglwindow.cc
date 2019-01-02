@@ -23,7 +23,6 @@ void OpenGLWindow::resizeGL(int w, int h) {
         h = 1;
     if (_context)
         glViewport(0, 0, w, h);
-    main_cam_controller->resetView();
     main_cam_controller->resetProj();
     main_cam_controller->setPersModel(DEFAULT_FOV, float(w) / float(h), 1, 1000);
 }

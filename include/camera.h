@@ -24,10 +24,10 @@ public:
     ~Camera(){}
 
     void resetView() {
+        _view.setToIdentity();
         _eye = QVector3D(0, 0, 0);
         _at  = QVector3D(0, 0, 0);
         _up  = QVector3D(0, 1, 0);
-        _view.setToIdentity();// because no
     }
     void resetProj() { _projection.setToIdentity(); }
 
@@ -51,6 +51,7 @@ public:
 private:
 
     void _updateView() {
+        _view.setToIdentity();
         _view.lookAt(_eye, _at, _up);
     }
     QVector3D _eye;

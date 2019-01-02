@@ -39,10 +39,10 @@ void MatchViewer::render() {
 
 
     //main_cam_controller->resetView();
-    //auto proj = main_cam_controller->getCamProj();
-    //auto view = main_cam_controller->getCamView();
-    main_cam_controller->resetView();
-    main_cam_controller->setCamView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    auto proj = main_cam_controller->getCamProj();
+    auto view = main_cam_controller->getCamView();
+    //main_cam_controller->resetView();
+    //main_cam_controller->setCamView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
     auto mvp = main_cam_controller->getCamProj() * main_cam_controller->getCamView() * _model;
 
 
@@ -116,4 +116,7 @@ void MatchViewer::initGeometry() {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort), indices, GL_STATIC_DRAW);
+
+    main_cam_controller->resetView();
+    main_cam_controller->setCamView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
 }
