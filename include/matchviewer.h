@@ -5,6 +5,7 @@
 #include <QOpenGLShaderProgram>
 #include <memory>
 #include "noncopyable.h"
+#include "../include/common.h"
 
 class MatchViewer : public OpenGLWindow {
 public:

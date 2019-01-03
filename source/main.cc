@@ -2,6 +2,8 @@
 #include <QSurfaceFormat>
 #include "../include/matchviewer.h"
 
+#define DEBUG
+
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 

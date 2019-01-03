@@ -1,12 +1,11 @@
 #include "../include/matchviewer.h"
 #include "../include/point.h"
 
+#include "../include/glcheckerror.h"
+
 
 MatchViewer::MatchViewer(QWindow *parent) :
-    OpenGLWindow(parent),
-    _xrot(0.0f),
-    _yrot(0.0f),
-    _zrot(0.0f) { }
+    OpenGLWindow(parent) { }
 
 MatchViewer::~MatchViewer() {
     glDeleteBuffers(2, &_vbo_ids[0]);
@@ -14,40 +13,37 @@ MatchViewer::~MatchViewer() {
 
 void MatchViewer::initialize() {
     initGeometry();
-    glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glClearDepthf(1.0);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH, GL_NICEST);
-    glPointSize(10.0f);
     glEnable(GL_BLEND);
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
+    glPointSize(10.0f);
     loadShader();
 }
 
 void MatchViewer::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _program->bind();
-
-
     _model.setToIdentity();
     _model.rotate(_xrot, 1.0f, 0.0f, 0.0f);
 
 
-    //main_cam_controller->resetView();
     auto proj = main_cam_controller->getCamProj();
     auto view = main_cam_controller->getCamView();
-    //main_cam_controller->resetView();
-    //main_cam_controller->setCamView(QVector3D(-5.0f, 0.0f, 0.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    main_cam_controller->resetView();
+    main_cam_controller->setCamView(QVector3D(0.0f, 0.0f, 8.0), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+
+
     auto mvp = main_cam_controller->getCamProj() * main_cam_controller->getCamView() * _model;
 
-
     _program->setUniformValue("mvp", mvp);
-
 
 
     quintptr offset = 0;
@@ -60,11 +56,9 @@ void MatchViewer::render() {
     _program->enableAttributeArray((_color_attr));
     glVertexAttribPointer(_color_attr, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const void*)offset);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
-    glDrawElements(GL_POINTS,3, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_SHORT, nullptr);
 
     _program->release();
-
-    _xrot += 0.5;
 }
 
 void MatchViewer::keyPressEvent(QKeyEvent *event) {
@@ -101,10 +95,14 @@ void MatchViewer::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void MatchViewer::wheelEvent(QWheelEvent *event) {
-    if (event->angleDelta().y() > 0)
-        main_cam_controller->zoom(0.1);
-    else
-        main_cam_controller->zoom(-0.1);
+    static float factor = 0.01;
+    if (event->angleDelta().y() > 0) {
+        factor += DEFAULT_FACTOR;
+        main_cam_controller->zoom(factor);
+    } else {
+        factor -= DEFAULT_FACTOR;
+        main_cam_controller->zoom(factor);
+    }
     renderNow();
     OpenGLWindow::wheelEvent(event);
 }
@@ -130,7 +128,7 @@ void MatchViewer::initGeometry() {
     GLushort indices[] = {0, 1, 2};
 
     glBindBuffer(GL_ARRAY_BUFFER, _vbo_ids[0]);
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(VertexData), vertices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(VertexData), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo_ids[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort), indices, GL_STATIC_DRAW);

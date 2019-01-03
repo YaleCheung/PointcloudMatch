@@ -12,6 +12,7 @@
 #include <memory>
 #include "noncopyable.h"
 #include "cameracontroller.h"
+#include "../include/common.h"
 
 class OpenGLWindow : public QWindow, NonCopyable, protected QOpenGLFunctions {
     Q_OBJECT

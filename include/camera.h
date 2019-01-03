@@ -4,11 +4,8 @@
 #include <QVector3D>
 #include <QString>
 #include <QMatrix4x4>
+#include "../include/common.h"
 
-constexpr float DEFAULT_RATIO = 0.75;
-constexpr float DEFAULT_FOV = 45.0;
-constexpr float DEFAULT_NEAR = 1.0;
-constexpr float DEFAULT_FAR = 1000.0;
 
 class Camera {
 public:

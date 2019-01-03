@@ -29,7 +29,9 @@ HEADERS  += \
     include/camera.h \
     include/angle.h \
     include/point.h \
-    include/cameracontroller.h
+    include/cameracontroller.h \
+    include/glcheckerror.h \
+    include/common.h
 
 RESOURCES += \
     src.qrc

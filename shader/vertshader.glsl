@@ -6,7 +6,6 @@ precision mediump float;
 attribute vec4 pos_attr;
 attribute vec3 color_attr;
 
-uniform mat4 mv_matrix;
 uniform mat4 mvp;
 
 

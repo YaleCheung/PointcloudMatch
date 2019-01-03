@@ -2,9 +2,14 @@
 #define CAMERACONTROLLER_H
 
 #include "../include/camera.h"
+#ifndef DEBUG
+#define DEBUG
+    #include <iostream>
+#endif // DEBUG
 #include "noncopyable.h"
 #include <memory>
 #include <QRectF>
+#include "../include/common.h"
 
 class CameraController : NonCopyable {
 public:

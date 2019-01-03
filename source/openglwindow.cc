@@ -6,10 +6,12 @@ OpenGLWindow::OpenGLWindow(QWindow *parent) :
     _animating(false),
     _context(nullptr),
     _show_full_screen(false) {
+
+    setSurfaceType(QWindow::OpenGLSurface);
+    resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
     auto camera = std::make_shared<Camera>(DEFAULT_RATIO);
     main_cam_controller = std::make_shared<CameraController>(camera);
-    setSurfaceType(QWindow::OpenGLSurface);
-    resize(640, 480);
 }
 
 OpenGLWindow::~OpenGLWindow() { }
@@ -24,7 +26,7 @@ void OpenGLWindow::resizeGL(int w, int h) {
     if (_context)
         glViewport(0, 0, w, h);
     main_cam_controller->resetProj();
-    main_cam_controller->setPersModel(DEFAULT_FOV, float(w) / float(h), 1, 1000);
+    main_cam_controller->setPersModel(DEFAULT_FOV, float(h) / float(w), DEFAULT_NEAR, DEFAULT_FAR);
 }
 
 void OpenGLWindow::setAnimating(bool animating) {
