@@ -65,6 +65,7 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
     switch(event->key()) {
         case Qt::Key_Up: {
             //_xrot-=0.5f;
+            main_cam_controller->roll(5);
             break;
         }
         case Qt::Key_Down: {

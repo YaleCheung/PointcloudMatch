@@ -14,8 +14,13 @@ void CameraController::zoom(float factor = DEFAULT_FACTOR){
 
 void CameraController::roll(float angle) {
     QMatrix4x4 m;
-    m.rotate(angle, 0.0f, 1.0f, 0.0f); // rotate along x axis
-    _updateDirection();
+    m.setToIdentity();
+    m.rotate(angle, _cam_direction); // rotate along x axis
+
+    // up vector;
+    QVector4D up_4d = (_camera->getUp());
+    up_4d = up_4d * m;
+    setCamView(_camera->getEye(), _camera->getAt(), QVector3D(up_4d.x(), up_4d.y(), up_4d.z()));
 }
 
 void CameraController::yaw(float angle) {
