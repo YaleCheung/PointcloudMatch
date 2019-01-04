@@ -1,0 +1,10 @@
+#ifndef OPERATIONMODE_HHH
+#define OPERATIONMODE_HHH
+
+enum OperationMode {
+    MODE_SWITCH,
+    NORMAL_KEY_OP,
+    MOUSE_OP
+};
+
+#endif // OPERATIONMODE_HHH

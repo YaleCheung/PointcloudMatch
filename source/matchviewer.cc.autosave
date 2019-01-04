@@ -74,7 +74,7 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
             break;
         }
         case Qt::Key_Left: {
-            //_yrot-=0.5f;
+
             //main_cam_controller->translate(QVector3D(0.0f, 0.0f, 0.1f));
             main_cam_controller->yaw(5);
             break;

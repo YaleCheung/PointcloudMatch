@@ -31,7 +31,8 @@ HEADERS  += \
     include/point.h \
     include/cameracontroller.h \
     include/glcheckerror.h \
-    include/common.h
+    include/common.h \
+    include/operationmode.h
 
 RESOURCES += \
     src.qrc

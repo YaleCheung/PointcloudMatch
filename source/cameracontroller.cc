@@ -24,11 +24,26 @@ void CameraController::roll(float angle) {
 }
 
 void CameraController::yaw(float angle) {
+    QMatrix4x4 m;
+    m.setToIdentity();
+    m.rotate(angle, _camera->getUp()); // rotate along x axis
 
+    // up vector;
+    QVector4D direction_4d = _cam_direction;
+    direction_4d = direction_4d * m;
+    QVector3D new_at = _camera ->getEye() - QVector3D(direction_4d.x(), direction_4d.y(), direction_4d.z());
+    setCamView(_camera->getEye(), new_at, _camera->getUp());
 }
 
 void CameraController::pitch(float angle) {
+    QMatrix4x4 m;
+    QVector3D cam_pitch_axis = QVector3D::crossProduct(_cam_direction, _camera ->getUp());
+    m.setToIdentity();
+    m.rotate(angle, cam_pitch_axis); // rotate along x axis
 
+    QVector4D direction_4d = direction_4d * m;
+    QVector3D new_at = _camera ->getEye() - QVector3D(direction_4d.x(), direction_4d.y(), direction_4d.z());
+    setCamView(_camera->getEye(), new_at, _camera->getUp());
 }
 
 void CameraController::translate(const QVector3D& direction) {

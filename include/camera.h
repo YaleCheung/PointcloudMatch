@@ -51,6 +51,7 @@ private:
         _view.setToIdentity();
         _view.lookAt(_eye, _at, _up);
     }
+
     QVector3D _eye;
     QVector3D _at;
     QVector3D _up;
