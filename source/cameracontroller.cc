@@ -8,7 +8,7 @@ CameraController::CameraController(std::shared_ptr<Camera> camera) :
 }
 
 void CameraController::zoom(float factor = DEFAULT_FACTOR){
-    _camera->setPerspectiveProj(DEFAULT_FOV + factor, float(DEFAULT_HEIGHT) / float(DEFAULT_WIDTH), DEFAULT_NEAR, DEFAULT_FAR);
+    _camera->setPerspectiveProj(DEFAULT_FOV + factor, DEFAULT_RATIO, DEFAULT_NEAR, DEFAULT_FAR);
 }
 
 
@@ -41,11 +41,13 @@ void CameraController::pitch(float angle) {
     m.setToIdentity();
     m.rotate(angle, cam_pitch_axis); // rotate along x axis
 
-    QVector4D direction_4d = direction_4d * m;
+    QVector4D direction_4d = _cam_direction;
+    direction_4d = direction_4d * m;
+
     QVector3D new_at = _camera ->getEye() - QVector3D(direction_4d.x(), direction_4d.y(), direction_4d.z());
     setCamView(_camera->getEye(), new_at, _camera->getUp());
 }
 
 void CameraController::translate(const QVector3D& direction) {
-    _camera->setView(_camera->getEye() + direction, _camera->getAt() + direction, _camera->getUp());
+    setCamView(_camera->getEye() + direction, _camera -> getAt() + direction, _camera->getUp());
 }

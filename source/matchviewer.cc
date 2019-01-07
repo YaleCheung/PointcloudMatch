@@ -70,13 +70,13 @@ void MatchViewer::keyPressEvent(QKeyEvent *event) {
         }
         case Qt::Key_Down: {
             //main_cam_controller->zoom(-0.1);
-            main_cam_controller->pitch(5);
+            main_cam_controller->pitch(60);
             break;
         }
         case Qt::Key_Left: {
-            //_yrot-=0.5f;
+
             //main_cam_controller->translate(QVector3D(0.0f, 0.0f, 0.1f));
-            main_cam_controller->yaw(5);
+            main_cam_controller->yaw(10);
             break;
         }
         case Qt::Key_Right: {
@@ -98,7 +98,7 @@ void MatchViewer::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void MatchViewer::wheelEvent(QWheelEvent *event) {
-    static float factor = 0.01;
+    static float factor = 0.5;
     if (event->angleDelta().y() > 0) {
         factor += DEFAULT_FACTOR;
         main_cam_controller->zoom(factor);
@@ -137,5 +137,5 @@ void MatchViewer::initGeometry() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort), indices, GL_STATIC_DRAW);
 
     main_cam_controller->resetView();
-    main_cam_controller->setCamView(QVector3D(0.0f, 0.0f, 8.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    main_cam_controller->setCamView(QVector3D(0.0f, 8.0f, 500.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
 }

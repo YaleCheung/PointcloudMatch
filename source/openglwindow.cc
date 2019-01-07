@@ -26,7 +26,7 @@ void OpenGLWindow::resizeGL(int w, int h) {
     if (_context)
         glViewport(0, 0, w, h);
     main_cam_controller->resetProj();
-    main_cam_controller->setPersModel(DEFAULT_FOV, float(h) / float(w), DEFAULT_NEAR, DEFAULT_FAR);
+    main_cam_controller->setPersModel(DEFAULT_FOV, float(w) / float(h), DEFAULT_NEAR, DEFAULT_FAR);
 }
 
 void OpenGLWindow::setAnimating(bool animating) {

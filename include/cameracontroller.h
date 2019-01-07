@@ -26,7 +26,7 @@ public:
 
     void setCamView(const QVector3D& eye, const QVector3D& at, const QVector3D& up) {
         _cam_pos = eye;
-        _cam_direction = eye - at;
+        _updateDirection();
         _camera->setView(eye, at, up);
     }
 
